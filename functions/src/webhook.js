@@ -7,8 +7,7 @@ const uuid = require('uuid');
 
 
 /* Dialoflow Cloud Function */
-/* Dialoflow Cloud Function */
-exports.forwardDialogflow = onRequest(async (request, response) => {
+exports.forwardDialogflowBasic = onRequest(async (request, response) => {
 
   if (request.method !== "POST") {
     return response.send(request.method);
