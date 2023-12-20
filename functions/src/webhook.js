@@ -6,7 +6,10 @@ const uuid = require('uuid');
 
 
 
-/* Dialoflow Cloud Function */
+/* 
+  Dialoflow Cloud Function Gatway 
+  Remark : Example Forward Message Event to Dialogflow
+*/
 exports.forwardDialogflowBasic = onRequest(async (request, response) => {
 
   if (request.method !== "POST") {
