@@ -1,6 +1,5 @@
 const { onRequest, } = require("firebase-functions/v2/https");
 const line = require('../util/line.util');
-const middleware = require('../middlewares/middleware');
 const dialogflow = require('../util/dialogflow.util');
 const uuid = require('uuid');
 
@@ -56,22 +55,35 @@ exports.departmentA = onRequest(async (request, response) => {
 
     if (event.type === "message" && event.message.type === "text") {
 
-        const userId = event.source.userId
-         /* 
-            Get Profile 
-            https://developers.line.biz/en/reference/messaging-api/#get-profile
-         */
-        const profile = await line.getProfile(userId,destination)
 
-        /* [IMPORTANT] none Responses custom payload type */
-        const resDialogflow = await dialogflow.postToDialogflowWithCredential(event.source.userId, event.message.text, profile.language)
-        const resConvert =  await dialogflow.convertFormat(resDialogflow.fulfillmentMessages)
-      
-        /* 
-          reply multi Channel
-          require : destination
-        */
-        await line.reply(destination,event.replyToken, resConvert)
+          if (event.message.text === "demo") {
+
+            await line.reply(destination,event.replyToken, [{
+              "type": "text",
+              "text": request.body.destination
+            }])
+
+          } else {
+
+
+            const userId = event.source.userId
+            /* 
+                Get Profile 
+                https://developers.line.biz/en/reference/messaging-api/#get-profile
+            */
+            const profile = await line.getProfile(userId,destination)
+
+            /* [IMPORTANT] none Responses custom payload type */
+            const resDialogflow = await dialogflow.postToDialogflowWithCredential(event.source.userId, event.message.text, profile.language)
+            const resConvert =  await dialogflow.convertFormat(resDialogflow.fulfillmentMessages)
+          
+            /* 
+              reply multi Channel
+              require : destination
+            */
+            await line.reply(destination,event.replyToken, resConvert)
+        }
+
         return response.end();
       }
 
@@ -96,28 +108,38 @@ exports.departmentB = onRequest(async (request, response) => {
 
     if (event.type === "message" && event.message.type === "text") {
 
-        const userId = event.source.userId
-         /* 
-            Get Profile 
-            https://developers.line.biz/en/reference/messaging-api/#get-profile
-         */
-        const profile = await line.getProfile(userId,destination)
+        if (event.message.text === "demo") {
+          
+          await line.reply(destination,event.replyToken, [{
+            "type": "text",
+            "text": request.body.destination
+           }])
 
-        const objDialogflow = {
-          "userId": event.source.userId,
-          "message": event.message.text,
-          "language": profile.language
+        } else {
+
+          const userId = event.source.userId
+          /* 
+              Get Profile 
+              https://developers.line.biz/en/reference/messaging-api/#get-profile
+          */
+          const profile = await line.getProfile(userId,destination)
+
+          const objDialogflow = {
+            "userId": event.source.userId,
+            "message": event.message.text,
+            "language": profile.language
+          }
+          /*Request Dialogflow Gateway */
+
+          const resDialogflow = await dialogflow.forwardDialodflow(objDialogflow)
+          const resConvert =  await dialogflow.convertFormat(resDialogflow.data.fulfillmentMessages)
+          
+          /* 
+            reply multi LINE Developer Messaging Channel
+            require : destination from object webhook 
+          */
+          await line.reply(destination,event.replyToken, resConvert)
         }
-        /*Request Dialogflow Gateway */
-
-        const resDialogflow = await dialogflow.forwardDialodflow(objDialogflow)
-        const resConvert =  await dialogflow.convertFormat(resDialogflow.data.fulfillmentMessages)
-         
-        /* 
-          reply multi LINE Developer Messaging Channel
-          require : destination from object webhook 
-        */
-        await line.reply(destination,event.replyToken, resConvert)
         return response.end();
       }
 
