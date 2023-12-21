@@ -8,7 +8,3 @@ setGlobalOptions({
 })
 
 exports.webhook = require('./src/webhook')
-
-
-
-

@@ -12,6 +12,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: install dependencies
         run: cd functions/ && npm install
+      - name: Write dialogflow_key.json
+        run: echo "${{ secrets.DIALOGFLOW_KEY }}" > dialogflow_key.json
       - name: deploy to production
         uses: docker://w9jds/firebase-action:master
         with:

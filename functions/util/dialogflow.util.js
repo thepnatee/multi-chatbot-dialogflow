@@ -80,7 +80,6 @@ exports.convertFormat = async (fulfillmentMessages) => {
     // console.log(JSON.stringify(obj));
 
     let msg = {};
-       if (obj.platform === "LINE") {
 
           if (obj.hasOwnProperty("image")) {
             msg = {
@@ -141,7 +140,6 @@ exports.convertFormat = async (fulfillmentMessages) => {
 
 
           }
-      }
     resMessage.push(msg)
   }
 
