@@ -145,4 +145,3 @@ exports.convertFormat = async (fulfillmentMessages) => {
 
   return resMessage.filter(obj => Object.keys(obj).length !== 0)
 }
-
