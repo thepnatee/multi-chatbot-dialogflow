@@ -51,6 +51,14 @@ https://upstash.com
   - Save File to Directory functions : dialogflow_key.json
   [IMPORTANT] change name key to dialogflow_key.json
 
+# Replace File Name 
+````
+dialogflow_key_demo.json 
+````
+to
+````
+dialogflow_key.json
+````
 
 ## Deploy
 

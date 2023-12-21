@@ -135,7 +135,10 @@ exports.dialogflow = onRequest(async (request, response) => {
     return response.send(request.method);
   }
 
-  await middleware.authorization(request, response)
+  if (request.headers.authorization !== process.env.DIALOGFLOW_AUTHORIZATION_KEY) {
+    return response.status(401).send('Unauthorized');
+  }
+
 
   // const object = JSON.parse(request.body)
   const object = request.body
