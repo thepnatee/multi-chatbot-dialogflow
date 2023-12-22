@@ -16,7 +16,7 @@ jobs:
         run: cd functions/ && npm install
 
       - name: Set up Google Cloud credentials
-        run: echo ${{ secrets.DIALOGFLOW_KEY }} > functions/dialogflow_key.json  
+        run: echo "${{ secrets.DIALOGFLOW_KEY }}" > functions/dialogflow_key.json  
       - name: Display File Content
         run: cat functions/dialogflow_key.json
 
