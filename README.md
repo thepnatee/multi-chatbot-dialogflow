@@ -70,4 +70,9 @@ dialogflow_key.json
 ````
 firebase deploy --only functions
 ````
-  
+
+## Deploy With Github Action
+
+  Setting -> Actions secrets and variables -> New Repository secrets
+  1. Create Key FIREBASE_TOKEN and Value from firebase login:ci
+  2. Create Key DIALOGFLOW_KEY and Value from  dialogflow_key.json
