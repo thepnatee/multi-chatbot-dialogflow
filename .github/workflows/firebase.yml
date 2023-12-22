@@ -20,7 +20,7 @@ jobs:
       - name: Upload File as Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: dialogflow-credentials
+          name: dialogflow-dialogflow_key
           path: dialogflow_key.json
       - name: deploy to production
         uses: docker://w9jds/firebase-action:master
