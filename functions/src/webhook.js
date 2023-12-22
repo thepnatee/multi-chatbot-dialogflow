@@ -55,6 +55,7 @@ exports.departmentA = onRequest(async (request, response) => {
 
     if (event.type === "message" && event.message.type === "text") {
 
+          const userId = event.source.userId
 
           if (event.message.text === "demo") {
 
@@ -66,26 +67,20 @@ exports.departmentA = onRequest(async (request, response) => {
           } else {
 
 
-            const userId = event.source.userId
             /* 
                 Get Profile 
                 https://developers.line.biz/en/reference/messaging-api/#get-profile
             */
             const profile = await line.getProfile(userId,destination)
-
-            console.log("----");
-            console.log("profile -> ", profile);
-            console.log("----");
-
             /* [IMPORTANT] none Responses custom payload type */
             const resDialogflow = await dialogflow.postToDialogflowWithCredential(event.source.userId, event.message.text, profile.language)
             const resConvert =  await dialogflow.convertFormat(resDialogflow.fulfillmentMessages)
-          
             /* 
               reply multi Channel
               require : destination
             */
             await line.reply(destination,event.replyToken, resConvert)
+
         }
 
         return response.end();

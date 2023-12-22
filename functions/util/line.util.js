@@ -32,8 +32,7 @@ exports.getProfile = async (userId,destination) => {
 
 exports.reply = async(destination,token, payload) => {
   const access_token = await GetAccessToken(destination)
-
-  return axios({
+  let objectRequest = {
     method: "post",
     url: `${LINE_MESSAGING_API}/message/reply`,
     headers: {
@@ -44,7 +43,8 @@ exports.reply = async(destination,token, payload) => {
       replyToken: token,
       messages: payload
     })
-  });
+  }
+  return axios(objectRequest);
 };
 
 /* 

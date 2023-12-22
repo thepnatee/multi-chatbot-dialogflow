@@ -10,10 +10,6 @@ exports.postToDialogflowWithCredential = async (userId, message, language) => {
   const sessionId = userId;
   const projectId = process.env.DIALOGFLOW_PROJECT_ID;
 
-  console.log("----");
-  console.log("projectId -> ", projectId);
-  console.log("----");
-
   // Create a new session
   const sessionClient = new dialogflow.SessionsClient({
     projectId,
@@ -47,7 +43,6 @@ exports.postToDialogflowWithCredential = async (userId, message, language) => {
 // Dialogflow Forward API
 exports.postToDialogflow = async (req) => {
   req.headers.host = "dialogflow.cloud.google.com";
-  // console.log(req);
   return axios({
     url: `https://dialogflow.cloud.google.com/v1/integrations/line/webhook/${process.env.DIALOGFLOW_AGENT_ID}`,
     headers: req.headers,
@@ -76,16 +71,13 @@ exports.forwardDialodflow = async(object) => {
 };
 
 /*
-  Dialogflow Response LINE : Text , Image , Quick Replies
+  Dialogflow Response LINE : Text , Image , Quick Replies , Card
 */ 
 exports.convertFormat = async (fulfillmentMessages) => {
   let resMessage = []
   for (const obj of fulfillmentMessages) {
-
-    // console.log(JSON.stringify(obj));
-
     let msg = {};
-
+        if (obj.platform === "LINE") {
           if (obj.hasOwnProperty("image")) {
             msg = {
               "type": "image",
@@ -120,9 +112,6 @@ exports.convertFormat = async (fulfillmentMessages) => {
             };
           } else if (obj.hasOwnProperty("card")) {
             let actions = []
-
-            // console.log(obj.card);
-
             obj.card.buttons.forEach(element => {
               let objectTemplate = {
                 "type": "message",
@@ -142,9 +131,8 @@ exports.convertFormat = async (fulfillmentMessages) => {
                 "actions": actions
               }
             }
-
-
           }
+        }
     resMessage.push(msg)
   }
 

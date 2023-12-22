@@ -17,8 +17,6 @@ jobs:
 
       - name: Set up Google Cloud credentials
         run: echo '${{ secrets.DIALOGFLOW_KEY }}' > functions/dialogflow_key.json  
-      - name: Display File Content
-        run: cat functions/dialogflow_key.json
 
       - name: deploy to production
         uses: docker://w9jds/firebase-action:master
