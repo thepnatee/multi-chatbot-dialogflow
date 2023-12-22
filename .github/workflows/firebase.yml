@@ -11,9 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
-        run: cd functions/ && npm install
+        run: cd functions/ && npm install && echo "${{ secrets.DIALOGFLOW_KEY }}" > dialogflow_key.json
+      - name: Read JSON Key
+        run: cat dialogflow_key.json
       - name: Set up environment variables
-        run: echo "DIALOGFLOW_JSON_KEY_SECRET=${{ secrets.DIALOGFLOW_KEY }}" >> $GITHUB_ENV
+        run: echo "DIALOGFLOW_KEY=${{ secrets.DIALOGFLOW_KEY }}" >> .env
   
       - name: deploy to production
         uses: docker://w9jds/firebase-action:master
