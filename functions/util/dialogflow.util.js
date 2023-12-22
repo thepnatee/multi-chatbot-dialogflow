@@ -10,6 +10,11 @@ exports.postToDialogflowWithCredential = async (userId, message, language) => {
   const sessionId = userId;
   const projectId = process.env.DIALOGFLOW_PROJECT_ID;
   const keyJson = JSON.parse(process.env.DIALOGFLOW_KEY);
+
+  console.log("----");
+  console.log(keyJson);
+  console.log("----");
+
   // Create a new session
   const sessionClient = new dialogflow.SessionsClient({
     projectId,
