@@ -12,12 +12,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: install dependencies
         run: cd functions/ && npm install
-      - name: Set up environment variables
-        run: echo "DIALOGFLOW_KEY=${{ secrets.DIALOGFLOW_KEY }}" >> .env
+
       - name: Set up Google Cloud credentials
-        env:
-          DIALOGFLOW_KEY: ${{ secrets.DIALOGFLOW_KEY }}
-        run: echo "$DIALOGFLOW_KEY" > dialogflow_key.json  
+        run: echo ${{ secrets.DIALOGFLOW_KEY }} > dialogflow_key.json 
+         
       - name: deploy to production
         uses: docker://w9jds/firebase-action:master
         with:

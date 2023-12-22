@@ -73,6 +73,10 @@ exports.departmentA = onRequest(async (request, response) => {
             */
             const profile = await line.getProfile(userId,destination)
 
+            console.log("----");
+            console.log("profile -> ", profile);
+            console.log("----");
+
             /* [IMPORTANT] none Responses custom payload type */
             const resDialogflow = await dialogflow.postToDialogflowWithCredential(event.source.userId, event.message.text, profile.language)
             const resConvert =  await dialogflow.convertFormat(resDialogflow.fulfillmentMessages)
