@@ -11,8 +11,8 @@ exports.getProfile = async (userId,destination) => {
   /*
     Set Profile LINE to Redis Storage
   */
-  const profile = await redis.getJsonObject(userId)
-  if (!profile) {
+  // const profile = await redis.getJsonObject(userId)
+  // if (!profile) {
     const response = await axios({
       method: 'get',
       maxBodyLength: Infinity,
@@ -25,9 +25,8 @@ exports.getProfile = async (userId,destination) => {
 
     redis.setJsonObject(userId,response.data)
     return response.data
-  } 
-
-  return profile
+  // } 
+  // return profile
 };
 
 exports.reply = async(destination,token, payload) => {

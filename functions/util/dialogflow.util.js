@@ -77,19 +77,24 @@ exports.convertFormat = async (fulfillmentMessages) => {
   let resMessage = []
   for (const obj of fulfillmentMessages) {
     let msg = {};
-        if (obj.platform === "LINE") {
-          if (obj.hasOwnProperty("image")) {
+          if (obj.platform === "PLATFORM_UNSPECIFIED" && obj.hasOwnProperty("text")) {
+            msg = {
+              "type": "text",
+              "text": obj.text.text[0]
+            };
+          }
+          if (obj.platform === "LINE" && obj.hasOwnProperty("image")) {
             msg = {
               "type": "image",
               "previewImageUrl": obj.image.imageUri,
               "originalContentUrl": obj.image.imageUri,
             };
-          } else if (obj.hasOwnProperty("text")) {
+          } else if (obj.platform === "LINE" && obj.hasOwnProperty("text")) {
             msg = {
               "type": "text",
               "text": obj.text.text[0]
             };
-          } else if (obj.hasOwnProperty("quickReplies")) {
+          } else if (obj.platform === "LINE" && obj.hasOwnProperty("quickReplies")) {
             let items = []
             obj.quickReplies.quickReplies.forEach((item) => {
               let obj = {
@@ -110,7 +115,7 @@ exports.convertFormat = async (fulfillmentMessages) => {
                 "items" : items
               }
             };
-          } else if (obj.hasOwnProperty("card")) {
+          } else if (obj.platform === "LINE" && obj.hasOwnProperty("card")) {
             let actions = []
             obj.card.buttons.forEach(element => {
               let objectTemplate = {
@@ -132,7 +137,6 @@ exports.convertFormat = async (fulfillmentMessages) => {
               }
             }
           }
-        }
     resMessage.push(msg)
   }
 
