@@ -16,6 +16,12 @@ jobs:
         env:
           DIALOGFLOW_KEY: ${{ secrets.DIALOGFLOW_KEY }}
         run: echo $DIALOGFLOW_KEY > dialogflow_key.json  
+
+      - name: Upload File as Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dialogflow-credentials
+          path: dialogflow_key.json
       - name: deploy to production
         uses: docker://w9jds/firebase-action:master
         with:
