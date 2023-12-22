@@ -16,14 +16,8 @@ jobs:
         run: cd functions/ && npm install
 
       - name: Set up Google Cloud credentials
-        run: echo $DIALOGFLOW_KEY > functions/dialogflow_key.json  
+        run: echo ${{ secrets.DIALOGFLOW_KEY }} > functions/dialogflow_key.json  
 
-      - name: Upload Dialogflow Key as Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: dialogflow_key
-          path: functions/dialogflow_key.json
-          
       - name: deploy to production
         uses: docker://w9jds/firebase-action:master
         with:
