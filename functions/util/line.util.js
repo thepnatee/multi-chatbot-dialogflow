@@ -1,5 +1,4 @@
 const axios = require("axios");
-const redis = require('../util/redis.util');
 
 
 const LINE_MESSAGING_API = process.env.LINE_MESSAGING_API;
@@ -8,12 +7,6 @@ const LINE_MESSAGING_API = process.env.LINE_MESSAGING_API;
 exports.getProfile = async (userId,destination) => {
 
   const access_token = await GetAccessToken(destination)
-  /*
-    Set Profile LINE to Redis Storage
-  */
-  // const profile = await redis.getJsonObject(userId)
-
-  // if (!profile) {
     const response = await axios({
       method: 'get',
       maxBodyLength: Infinity,
@@ -23,11 +16,7 @@ exports.getProfile = async (userId,destination) => {
         'Content-Type': 'application/json'
       },
     })
-
-    redis.setJsonObject(userId,response.data)
     return response.data
-  // } 
-  // return profile
 };
 
 exports.reply = async(destination,token, payload) => {

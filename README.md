@@ -5,7 +5,7 @@
 1. Create Firebase Project
 2. Create Provider & Channel LINE Developer 2 Channel
 3. Create Dialogflow Agent
-4. Register https://upstash.com/ for Redis
+4. Create Github Repository
 
 --------------------------------------
    
@@ -35,11 +35,6 @@ npm i
 
 ````
 npm run serve
-````
-
-## Redis 
-````
-https://upstash.com
 ````
 
 ## Generate API Credential Key 
