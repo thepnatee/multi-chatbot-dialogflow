@@ -70,18 +70,9 @@ exports.departmentA = onRequest(async (request, response) => {
                 https://developers.line.biz/en/reference/messaging-api/#get-profile
             */
             const profile = await line.getProfile(userId,destination)
-            console.log("---");
-            console.log(profile);
-            console.log("---");
             /* [IMPORTANT] none Responses custom payload type */
             const resDialogflow = await dialogflow.postToDialogflowWithCredential(event.source.userId, event.message.text, profile.language)
-            console.log("---");
-            console.log(resDialogflow);
-            console.log("---");
             const resConvert =  await dialogflow.convertFormat(resDialogflow.fulfillmentMessages)
-            console.log("---");
-            console.log(resConvert);
-            console.log("---");
             /* 
               reply multi Channel
               require : destination

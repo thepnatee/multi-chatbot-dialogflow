@@ -1,5 +1,5 @@
-name: Firebase Deploy
-
+name: Deploy
+run-name: ${{ github.actor }} is deploy out GitHub Actions 🚀
 on:
   push:
     branches:
