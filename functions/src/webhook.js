@@ -66,7 +66,7 @@ exports.departmentA = onRequest(async (request, response) => {
 
           } else {
             /* 
-                Get Profile 
+                Get Profile ฿
                 https://developers.line.biz/en/reference/messaging-api/#get-profile
             */
             const profile = await line.getProfile(userId,destination)
