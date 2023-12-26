@@ -1,4 +1,6 @@
-const { onRequest, } = require("firebase-functions/v2/https");
+const {
+  onRequest,
+} = require("firebase-functions/v2/https");
 const line = require('../util/line.util');
 const dialogflow = require('../util/dialogflow.util');
 const uuid = require('uuid');
@@ -9,7 +11,9 @@ const uuid = require('uuid');
   Dialoflow Cloud Function Gatway 
   Remark : Example Forward Message Event to Dialogflow
 */
-exports.forwardDialogflowBasic = onRequest(async (request, response) => {
+exports.forwardDialogflowBasic = onRequest({
+  cors: true
+}, async (request, response) => {
 
   if (request.method !== "POST") {
     return response.send(request.method);
@@ -30,7 +34,7 @@ exports.forwardDialogflowBasic = onRequest(async (request, response) => {
   จำลองสถานการณ์ ว่า 
   
   - Webhook-Department A คือ Webhook Server ตัวที่ 1
-  - Webhook-Department B คือ Webhook Server ตัวที่ 2 
+  - Webhook-Department B คือ Webhook Server ตัวที่ 2 ตัวเดียวกับ Partment A
 
   ซึ่งทั้งสองตัวจะใช้ Dialogflow SDK : @google-cloud/dialogflow
   ````
@@ -55,34 +59,34 @@ exports.departmentA = onRequest(async (request, response) => {
 
     if (event.type === "message" && event.message.type === "text") {
 
-          const userId = event.source.userId
+      const userId = event.source.userId
 
-          if (event.message.text === "demo") {
+      if (event.message.text === "demo") {
 
-            await line.reply(destination,event.replyToken, [{
-              "type": "text",
-              "text": request.body.destination
-            }])
+        await line.reply(destination, event.replyToken, [{
+          "type": "text",
+          "text": request.body.destination
+        }])
 
-          } else {
-            /* 
-                Get Profile ฿
-                https://developers.line.biz/en/reference/messaging-api/#get-profile
-            */
-            const profile = await line.getProfile(userId,destination)
-            /* [IMPORTANT] none Responses custom payload type */
-            const resDialogflow = await dialogflow.postToDialogflowWithCredential(event.source.userId, event.message.text, profile.language)
-            const resConvert =  await dialogflow.convertFormat(resDialogflow.fulfillmentMessages)
-            /* 
-              reply multi Channel
-              require : destination
-            */
-            await line.reply(destination,event.replyToken, resConvert)
+      } else {
+        /* 
+            Get Profile ฿
+            https://developers.line.biz/en/reference/messaging-api/#get-profile
+        */
+        const profile = await line.getProfile(userId, destination)
+        /* [IMPORTANT] none Responses custom payload type */
+        const resDialogflow = await dialogflow.postToDialogflowWithCredential(event.source.userId, event.message.text, profile.language)
+        const resConvert = await dialogflow.convertFormat(resDialogflow.fulfillmentMessages)
+        /* 
+          reply multi Channel
+          require : destination
+        */
+        await line.reply(destination, event.replyToken, resConvert)
 
-        }
-
-        return response.end();
       }
+
+      return response.end();
+    }
 
   }
 
@@ -105,40 +109,40 @@ exports.departmentB = onRequest(async (request, response) => {
 
     if (event.type === "message" && event.message.type === "text") {
 
-        if (event.message.text === "demo") {
-          
-          await line.reply(destination,event.replyToken, [{
-            "type": "text",
-            "text": request.body.destination
-           }])
+      if (event.message.text === "demo") {
 
-        } else {
+        await line.reply(destination, event.replyToken, [{
+          "type": "text",
+          "text": request.body.destination
+        }])
 
-          const userId = event.source.userId
-          /* 
-              Get Profile 
-              https://developers.line.biz/en/reference/messaging-api/#get-profile
-          */
-          const profile = await line.getProfile(userId,destination)
+      } else {
 
-          const objDialogflow = {
-            "userId": event.source.userId,
-            "message": event.message.text,
-            "language": profile.language
-          }
-          /*Request Dialogflow Gateway */
+        const userId = event.source.userId
+        /* 
+            Get Profile 
+            https://developers.line.biz/en/reference/messaging-api/#get-profile
+        */
+        const profile = await line.getProfile(userId, destination)
 
-          const resDialogflow = await dialogflow.forwardDialodflow(objDialogflow)
-          const resConvert =  await dialogflow.convertFormat(resDialogflow.data.fulfillmentMessages)
-          
-          /* 
-            reply multi LINE Developer Messaging Channel
-            require : destination from object webhook 
-          */
-          await line.reply(destination,event.replyToken, resConvert)
+        const objDialogflow = {
+          "userId": event.source.userId,
+          "message": event.message.text,
+          "language": profile.language
         }
-        return response.end();
+        /*Request Dialogflow Gateway */
+
+        const resDialogflow = await dialogflow.forwardDialodflow(objDialogflow)
+        const resConvert = await dialogflow.convertFormat(resDialogflow.data.fulfillmentMessages)
+
+        /* 
+          reply multi LINE Developer Messaging Channel
+          require : destination from object webhook 
+        */
+        await line.reply(destination, event.replyToken, resConvert)
       }
+      return response.end();
+    }
 
   }
 
@@ -168,4 +172,3 @@ exports.dialogflow = onRequest(async (request, response) => {
   return response.send(resDialogflow);
 
 });
-
